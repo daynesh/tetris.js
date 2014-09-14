@@ -1,0 +1,10 @@
+{
+  "name": "tetris.js",
+  "description": "A tetris application built using Javascript and served via Node.js",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^4.9.0",
+    "express-handlebars": "~1.0.3",
+    "node-sass": "~0.9.3"
+  }
+}
