@@ -1,4 +1,8 @@
-define(['jquery', 'underscore'], function($, _) {
+define(function(require, module, exports) {
+
+    var yelling = require('src/js/daynesh');
+    var _ = require('underscore');
+    require('src/js/hbs-templates');
 
     function TetrisGameController() {
         // Then listen to all necessary events
@@ -18,6 +22,10 @@ define(['jquery', 'underscore'], function($, _) {
     };
 
     TetrisGameController.prototype.startNewGame = function() {
+
+        console.log('startNewGame() called');
+
+        console.log('yelling: ', yelling);
         // First initialize all member variables
         this.initialize();
 
@@ -50,4 +58,6 @@ define(['jquery', 'underscore'], function($, _) {
 
     // Attach instantiated object to window
     window.tetris = new TetrisGameController();
+
+    exports.TetrisGameController = TetrisGameController;
 });

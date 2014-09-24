@@ -22,10 +22,10 @@ module.exports = function(grunt) {
         handlebars: {
             compile: {
                 options: {
-                    namespace: "Tetris"
+                    amd: true
                 },
                 files: {
-                    "build/js/hbs-templates.js": "views/**/*.handlebars"
+                    'src/js/hbs-templates.js': 'src/templates/*.hbs'
                 }
             }
         },
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
         // Config for jshint task
         jshint: {
             options: {
-                ignores: ['src/js/vendor/*.js']
+                ignores: ['src/js/vendor/*.js', 'src/js/hbs-templates.js']
             },
             all: ['src/js/**/*.js', '*.js']
         },
@@ -76,7 +76,15 @@ module.exports = function(grunt) {
             },
             css: {
                 files: ['src/scss/**/*.scss'],
-                tasks: ['compass']
+                tasks: ['sass']
+            },
+            views: {
+                files: ['src/templates/*.hbs'],
+                tasks: ['handlebars', 'requirejs', 'concat']
+            },
+            grunt: {
+                files: ['Gruntfile.js'],
+                tasks: ['build']
             }
         },
     });
