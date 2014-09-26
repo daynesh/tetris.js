@@ -1,41 +1,53 @@
 define(function(require, module, exports) {
 
-    var yelling = require('src/js/daynesh');
     var _ = require('underscore');
-    require('src/js/hbs-templates');
+    var Templates = require('src/js/hbs-templates');
 
     function TetrisGameController() {
-        // Then listen to all necessary events
-        $('.newgame').on('click', _.bind(this.startNewGame, this));
-        $('.play-pause.pause').on('click', this.continueGame);
-        $('.play-pause.play').on('click', this.pauseGame);
-        // $('.left').on('click', this.movePieceLeft);
-        // $('.down').on('click', this.movePieceDown);
-        // $('.right').on('click', this.movePieceRight);
-        // $('.rotate-left').on('click', this.rotatePieceLeft);
-        // $('.rotate-right').on('click', this.rotatePieceRight);
     }
 
     TetrisGameController.prototype.initialize = function() {
+        // Initialize variables
         this.level = 0;
         this.lines = 0;
+
+        // Render views
+        $('.gameplay-container')
+            .replaceWith(
+                Templates.gamePlayArea()
+            );
+        $('.game-metrics')
+            .replaceWith(
+                Templates.gameMetrics({
+                    level: this.level,
+                    lines: this.lines
+                })
+            );
+        $('.game-controls')
+            .replaceWith(
+                Templates.gameControls()
+            );
+
+        // Attach to events
+        $('.newgame')           .on('click', _.bind(this.startNewGame, this));
+        $('.play-pause.pause')  .on('click', this.continueGame);
+        $('.play-pause.play')   .on('click', this.pauseGame);
+        // $('.left')              .on('click', this.movePieceLeft);
+        // $('.down')              .on('click', this.movePieceDown);
+        // $('.right')             .on('click', this.movePieceRight);
+        // $('.rotate-left')       .on('click', this.rotatePieceLeft);
+        // $('.rotate-right')      .on('click', this.rotatePieceRight);
     };
 
     TetrisGameController.prototype.startNewGame = function() {
+        console.debug('startNewGame() called');
 
-        console.log('startNewGame() called');
-
-        console.log('yelling: ', yelling);
-        // First initialize all member variables
+        // Reset everything
         this.initialize();
-
-        // Render views
-        //   Tetris.templates.gamePlayArea();
-        //   Tetris.templates.gameMetrics();
-        //   Tetris.templates.gameControls();
     };
 
     TetrisGameController.prototype.continueGame = function(target) {
+        console.debug('continueGame() called');
 
         // Update button selector to .play
         $('.play-pause').removeClass('pause');
@@ -47,6 +59,8 @@ define(function(require, module, exports) {
     };
 
     TetrisGameController.prototype.pauseGame = function(target) {
+        console.debug('pauseGame() called');
+
         // Update button selector to .pause
         $('.play-pause').removeClass('play');
         $('.play-pause').addClass('pause');
@@ -57,7 +71,8 @@ define(function(require, module, exports) {
     };
 
     // Attach instantiated object to window
-    window.tetris = new TetrisGameController();
+    tetris = new TetrisGameController();
+    tetris.initialize();
 
     exports.TetrisGameController = TetrisGameController;
 });
