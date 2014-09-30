@@ -2,6 +2,8 @@ define(function(require, module, exports) {
 
     var _ = require('underscore');
     var Templates = require('src/js/hbs-templates');
+    var GameCanvasManager = require('src/js/gameCanvasManager');
+    var GameEventLoop = require('src/js/gameEventLoop');
 
     function TetrisGameController() {
     }
@@ -37,6 +39,10 @@ define(function(require, module, exports) {
         // $('.right')             .on('click', this.movePieceRight);
         // $('.rotate-left')       .on('click', this.rotatePieceLeft);
         // $('.rotate-right')      .on('click', this.rotatePieceRight);
+        $('.game-canvas')       .on('gameover', _.bind(this.onGameOver, this));
+
+        this.gameCanvasManager = new GameCanvasManager();
+        this.gameCanvasManager.initialize();
     };
 
     TetrisGameController.prototype.startNewGame = function() {
@@ -44,6 +50,9 @@ define(function(require, module, exports) {
 
         // Reset everything
         this.initialize();
+
+        this.gameEventLoop = new GameEventLoop(this.gameCanvasManager, this.gameOver);
+        this.gameEventLoop.startEventLoop();
     };
 
     TetrisGameController.prototype.continueGame = function(target) {
@@ -68,6 +77,10 @@ define(function(require, module, exports) {
 
         // Now actually restart interval, continue game where we left off
 
+    };
+
+    TetrisGameController.prototype.onGameOver = function() {
+        window.alert('The Game is over!');
     };
 
     // Attach instantiated object to window
