@@ -5,20 +5,39 @@ define(function(require, module, exports) {
     function GameCanvasManager() {
         this.$canvas = $('.game-canvas');
         this.context = this.$canvas[0].getContext('2d');
+        this.height = this.$canvas.height();
+        this.width = this.$canvas.width();
     }
 
     GameCanvasManager.prototype.initialize = function() {
         // Clear canvas
-        this.context.clearRect(0,0,300,420);
+        this.context.clearRect(0, 0, this.width, this.height);
     };
 
-    GameCanvasManager.prototype.canWeAdvance = function() {
-        if (this.currentPiece === undefined) {
-            return false;
-        }
-        else {
-            return true;
-        }
+    /**
+     * This function returns whether the piece (passed as a parameter)
+     * can be advanced to the next position (directly below its current
+     * position)
+     */
+    GameCanvasManager.prototype.canWeAdvancePiece = function(piece) {
+        var squaresToCheck = piece.getSquaresForAdvanceChecking();
+        var that = this;
+        return _.every(piece.getSquaresForAdvanceChecking(), function(square) {
+                // If we've reached the bottom of the canvas...
+                if (square.y+10 + square.length > that.height) {
+                    return false;
+                }
+
+                var colorOfNextPosition = that.context.getImageData(square.x+10, square.y+10 + square.length, 1, 1).data;
+
+                // Every one of these must be white...otherwise, we cannot advance this piece!
+                if (_.isEqual(_.pick(colorOfNextPosition, 0, 1, 2), {0:0, 1:0, 2:0})) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
     };
 
     GameCanvasManager.prototype.getCurrentPiece = function() {
@@ -30,12 +49,16 @@ define(function(require, module, exports) {
         var indivSquares = newPiece.getIndivSquares();
         var that = this;
 
-        // Determine whether the next position of each individual
-        // piece that makes up the newPiece has a color of white
+        // First, determine whether the position for this newPiece
+        // is not currently occupied by another piece (i.e., make sure
+        // it each square has the color white)
         var canWeAddNewPiece = _.every(indivSquares, function(square) {
-             var colorOfNewPosition = that.context.getImageData(square.x+10, square.y+10 + square.length, 1, 1).data;
+             var colorOfNewPosition = that.context.getImageData(square.x+10, square.y+10, 1, 1).data;
              if (_.isEqual(_.pick(colorOfNewPosition, 0, 1, 2), {0:0, 1:0, 2:0})) {
                  return true;
+             }
+             else {
+                return false;
              }
         });
 
@@ -50,6 +73,7 @@ define(function(require, module, exports) {
             });
         }
         else {
+            // If we can't even add a new piece, then the game is over
             this.$canvas.trigger('gameover');
         }
     };
@@ -70,14 +94,6 @@ define(function(require, module, exports) {
 
             // Clear previous square
             that.context.clearRect(square.x, square.y, square.length, square.length);
-
-            // Check if we need to set currentPiece to undefined
-            // indicating that we can no longer move this piece
-            var colorOfNextPosition = that.context.getImageData(square.x+10, square.y+10 + square.length, 1, 1).data;
-            if (!_.isEqual(_.pick(colorOfNextPosition, 0, 1, 2), {0:0, 1:0, 2:0}) || ((square.y + square.length + 10) > 420)) {
-                console.debug('can\'t advance anymore...colorOfNextPosition: ', colorOfNextPosition);
-                this.currentPiece = undefined;
-            }
         });
 
         // Now paint newly positioned squares
@@ -85,12 +101,8 @@ define(function(require, module, exports) {
             that.context.fillRect(newSquare.x, newSquare.y, newSquare.length, newSquare.length);
         });
 
-        // Update currentPiece
-        if (this.currentPiece !== undefined) {
-            this.currentPiece.setIndivSquares(newSquares);
-        }
-
-        console.debug('advanceCurrentPiece() - Finished moving currentPiece');
+        // Finally, update currentPiece
+        this.currentPiece.setIndivSquares(newSquares);
     };
 
     return GameCanvasManager;

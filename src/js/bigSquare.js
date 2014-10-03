@@ -24,12 +24,28 @@ define(function(require, module, exports) {
         return 'purple';
     };
 
+    /**
+     * This function returns a subset of squares we will use
+     * to determine whether we can advance this piece down one
+     * position (we'll check if the next position of each of these
+     * squares is not occupied)
+     */
     BigSquare.prototype.getSquaresForAdvanceChecking = function() {
-        var squaresToReturn = [];
+        var squaresMap = {};
 
-        // _.each(this.indivSquares, function(square) {
-        //     square.y
-        // });
+        _.each(this.indivSquares, function(square) {
+            // is square.x in squaresMap?
+            if (square.x in squaresMap) {
+                if (square.y > squaresMap[square.x].y) {
+                    squaresMap[square.x] = square;
+                }
+            }
+            else {
+                squaresMap[square.x] = square;
+            }
+        });
+
+        return _.values(squaresMap);
     };
 
     return BigSquare; 

@@ -19,10 +19,11 @@ define(function(require, module, exports) {
     };
 
     GameEventLoop.prototype.advancePiece = function() {
-        // Can we even advance the current piece?
-        if ( this.canvasManager.canWeAdvance() ) {
-            var currentPiece = this.canvasManager.getCurrentPiece();
+        var currentPiece = this.canvasManager.getCurrentPiece();
 
+        // If there is a currentPiece and we can advance it,
+        //  then what are you waiting for!
+        if (currentPiece && this.canvasManager.canWeAdvancePiece(currentPiece)) {
             this.canvasManager.advanceCurrentPiece();
         }
         else {
@@ -32,7 +33,8 @@ define(function(require, module, exports) {
             this.canvasManager.addNewPiece(newPiece);
         }
 
-        // Check if we completed a line
+        // Check if we completed a line (or lines)
+        //this.canvasManager.
     };
 
     GameEventLoop.prototype.stopEventLoop = function() {
