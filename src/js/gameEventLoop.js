@@ -19,11 +19,8 @@ define(function(require, module, exports) {
     };
 
     GameEventLoop.prototype.advancePiece = function() {
-        var currentPiece = this.canvasManager.getCurrentPiece();
-
-        // If there is a currentPiece and we can advance it,
-        //  then what are you waiting for!
-        if (currentPiece && this.canvasManager.canWeAdvancePiece(currentPiece)) {
+        // Check if we can advance first
+        if (this.canvasManager.canWeAdvance()) {
             this.canvasManager.advanceCurrentPiece();
         }
         else {
