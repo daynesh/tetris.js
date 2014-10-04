@@ -8,6 +8,13 @@ define(function(require, module, exports) {
     function TetrisGameController() {
     }
 
+    /**
+     * Initialize the GameController:
+     *  - initialize variables
+     *  - render views
+     *  - attach to events
+     *  - initialize canvas
+     */
     TetrisGameController.prototype.initialize = function() {
         // Initialize variables
         this.level = 0;
@@ -31,6 +38,18 @@ define(function(require, module, exports) {
             );
 
         // Attach to events
+        this.attachToEvents();
+
+        // Initialize the canvas
+        this.gameCanvasManager = new GameCanvasManager();
+        this.gameCanvasManager.initialize();
+    };
+
+    /**
+     * Attach to all relevant events
+     */
+    TetrisGameController.prototype.attachToEvents = function() {
+        // Button events
         $('.newgame')           .on('click', _.bind(this.startNewGame,   this));
         $('.play-pause')        .on('click', _.bind(this.playPauseGame,  this));
         $('.left')              .on('click', _.bind(this.movePieceLeft,  this));
@@ -55,11 +74,12 @@ define(function(require, module, exports) {
             }
             return;
         }, this));
-
-        this.gameCanvasManager = new GameCanvasManager();
-        this.gameCanvasManager.initialize();
     };
 
+    /**
+     * Start a new game, initializing the GameController
+     * as well as starting the main event loop
+     */
     TetrisGameController.prototype.startNewGame = function() {
         console.debug('startNewGame() called');
 
@@ -70,6 +90,9 @@ define(function(require, module, exports) {
         this.gameEventLoop.startEventLoop();
     };
 
+    /**
+     * Handle the clicking of the Play or Pause button
+     */
     TetrisGameController.prototype.playPauseGame = function(target) {
         var $currentTarget = $(target.currentTarget);
         if ($currentTarget.hasClass('play')) {
