@@ -40,6 +40,22 @@ define(function(require, module, exports) {
         // $('.rotate-right')      .on('click', this.rotatePieceRight);
         $('.game-canvas')       .on('gameover', _.bind(this.onGameOver,  this));
 
+        // Bind keys to certain functions
+        $(window).keydown(_.bind(function(e) {
+            switch (e.keyCode) {
+                case 39: // the right key
+                    this.movePieceRight();
+                    return false;
+                case 37: // the left key
+                    this.movePieceLeft();
+                    return false;
+                case 40: // the down key
+                    this.movePieceDown();
+                    return false;
+            }
+            return;
+        }, this));
+
         this.gameCanvasManager = new GameCanvasManager();
         this.gameCanvasManager.initialize();
     };
