@@ -20,9 +20,8 @@ define(function(require, module, exports) {
      * position)
      */
     GameCanvasManager.prototype.canWeAdvancePiece = function(piece) {
-        var squaresToCheck = piece.getSquaresForAdvanceChecking();
         var that = this;
-        return _.every(piece.getSquaresForAdvanceChecking(), function(square) {
+        return _.every(piece.getBottomMostSquares(), function(square) {
                 // If we've reached the bottom of the canvas...
                 if (square.y+10 + square.length > that.height) {
                     return false;
@@ -40,10 +39,16 @@ define(function(require, module, exports) {
             });
     };
 
+    /**
+     * Returns the currently active piece on the game canvas
+     */
     GameCanvasManager.prototype.getCurrentPiece = function() {
         return this.currentPiece;
     };
 
+    /**
+     * Function for adding a new piece to the game canvas
+     */
     GameCanvasManager.prototype.addNewPiece = function(newPiece) {
         // First, check if we can add this piece
         var indivSquares = newPiece.getIndivSquares();
@@ -69,7 +74,8 @@ define(function(require, module, exports) {
             // Now paint the piece on the canvas
             this.context.fillStyle = this.currentPiece.getColor();
             _.each(indivSquares, function(square) {
-                that.context.fillRect(square.x, square.y, square.length, square.length);
+                that.context.fillRect(square.x+2, square.y+2, square.length-4, square.length-4);
+                that.context.strokeRect(square.x+1, square.y+1, square.length-2, square.length-2);
             });
         }
         else {
@@ -98,11 +104,129 @@ define(function(require, module, exports) {
 
         // Now paint newly positioned squares
         _.each(newSquares, function(newSquare) {
-            that.context.fillRect(newSquare.x, newSquare.y, newSquare.length, newSquare.length);
+            that.context.fillRect(newSquare.x+2, newSquare.y+2, newSquare.length-4, newSquare.length-4);
+            that.context.strokeRect(newSquare.x+1, newSquare.y+1, newSquare.length-2, newSquare.length-2);
         });
 
         // Finally, update currentPiece
         this.currentPiece.setIndivSquares(newSquares);
+    };
+
+    /**
+     * Move current piece left by one position
+     */
+    GameCanvasManager.prototype.movePieceLeft = function() {
+        // First make sure there is in fact a currentPiece
+        if (this.currentPiece) {
+            // Check if left position isn't currently occupied already
+            var that = this;
+            var canMoveLeft = _.every(this.currentPiece.getLeftMostSquares(), function(square) {
+                // If we reached the left rail, then
+                // we know we can't go further left
+                if (square.x-10 < 0) {
+                    return false;
+                }
+
+                var colorOfNextPosition = that.context.getImageData(square.x-10, square.y+10, 1, 1).data;
+
+                // Every one of these must be white...otherwise, we cannot move left!
+                if (_.isEqual(_.pick(colorOfNextPosition, 0, 1, 2), {0:0, 1:0, 2:0})) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+
+            // If not currently occupied, then go ahead and move piece
+            if (canMoveLeft) {
+                var currentSquares = this.currentPiece.getIndivSquares();
+                var newSquares = [];
+
+                // Define newly positioned squares based on currentSquares
+                _.each(currentSquares, function(square) {
+                    var newSquare = new Square(square.x - square.length, square.y, square.length);
+                    newSquares.push(newSquare);
+
+                    // Clear previous square
+                    that.context.clearRect(square.x, square.y, square.length, square.length);
+                });
+
+                // Now paint newly positioned squares
+                _.each(newSquares, function(newSquare) {
+                    that.context.fillRect(newSquare.x+2, newSquare.y+2, newSquare.length-4, newSquare.length-4);
+                    that.context.strokeRect(newSquare.x+1, newSquare.y+1, newSquare.length-2, newSquare.length-2);
+                });
+
+                // Finally, update currentPiece
+                this.currentPiece.setIndivSquares(newSquares);
+            }
+        }
+    };
+
+    /**
+     * Move current piece right by one position
+     */
+    GameCanvasManager.prototype.movePieceRight = function() {
+        // First make sure there is in fact a currentPiece
+        if (this.currentPiece) {
+            // Check if left position isn't currently occupied already
+            var that = this;
+            var canMoveRight = _.every(this.currentPiece.getRightMostSquares(), function(square) {
+                // If we reached the right rail, then
+                // we know we can't go further left
+                if (square.x+10+square.length > that.width) {
+                    return false;
+                }
+
+                var colorOfNextPosition = that.context.getImageData(square.x+10 + square.length, square.y+10, 1, 1).data;
+
+                // Every one of these must be white...otherwise, we cannot move right!
+                if (_.isEqual(_.pick(colorOfNextPosition, 0, 1, 2), {0:0, 1:0, 2:0})) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+
+            // If not currently occupied, then go ahead and move piece
+            if (canMoveRight) {
+                var currentSquares = this.currentPiece.getIndivSquares();
+                var newSquares = [];
+
+                // Define newly positioned squares based on currentSquares
+                _.each(currentSquares, function(square) {
+                    var newSquare = new Square(square.x + square.length, square.y, square.length);
+                    newSquares.push(newSquare);
+
+                    // Clear previous square
+                    that.context.clearRect(square.x, square.y, square.length, square.length);
+                });
+
+                // Now paint newly positioned squares
+                _.each(newSquares, function(newSquare) {
+                    that.context.fillRect(newSquare.x+2, newSquare.y+2, newSquare.length-4, newSquare.length-4);
+                    that.context.strokeRect(newSquare.x+1, newSquare.y+1, newSquare.length-2, newSquare.length-2);
+                });
+
+                // Finally, update currentPiece
+                this.currentPiece.setIndivSquares(newSquares);
+            }
+        }
+    };
+
+    /**
+     * Move current piece down by one position
+     */
+    GameCanvasManager.prototype.movePieceDown = function() {
+        // First make sure there is in fact a currentPiece
+        if (this.currentPiece) {
+            // Check if next position isn't currently occupied already
+            if (this.canWeAdvancePiece(this.currentPiece)) {
+                this.advanceCurrentPiece();
+            }
+        }
     };
 
     return GameCanvasManager;

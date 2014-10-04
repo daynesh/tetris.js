@@ -31,15 +31,14 @@ define(function(require, module, exports) {
             );
 
         // Attach to events
-        $('.newgame')           .on('click', _.bind(this.startNewGame, this));
-        $('.play-pause.pause')  .on('click', this.continueGame);
-        $('.play-pause.play')   .on('click', this.pauseGame);
-        // $('.left')              .on('click', this.movePieceLeft);
-        // $('.down')              .on('click', this.movePieceDown);
-        // $('.right')             .on('click', this.movePieceRight);
+        $('.newgame')           .on('click', _.bind(this.startNewGame,   this));
+        $('.play-pause')        .on('click', _.bind(this.playPauseGame,  this));
+        $('.left')              .on('click', _.bind(this.movePieceLeft,  this));
+        $('.down')              .on('click', _.bind(this.movePieceDown,  this));
+        $('.right')             .on('click', _.bind(this.movePieceRight, this));
         // $('.rotate-left')       .on('click', this.rotatePieceLeft);
         // $('.rotate-right')      .on('click', this.rotatePieceRight);
-        $('.game-canvas')       .on('gameover', _.bind(this.onGameOver, this));
+        $('.game-canvas')       .on('gameover', _.bind(this.onGameOver,  this));
 
         this.gameCanvasManager = new GameCanvasManager();
         this.gameCanvasManager.initialize();
@@ -55,30 +54,72 @@ define(function(require, module, exports) {
         this.gameEventLoop.startEventLoop();
     };
 
-    TetrisGameController.prototype.continueGame = function(target) {
-        console.debug('continueGame() called');
-
-        // Update button selector to .play
-        $('.play-pause').removeClass('pause');
-        $('.play-pause').addClass('play');
-        $('.play-pause').attr('value', 'Pause');
-
-        // Now actually restart interval, continue game where we left off
-
+    TetrisGameController.prototype.playPauseGame = function(target) {
+        var $currentTarget = $(target.currentTarget);
+        if ($currentTarget.hasClass('play')) {
+            this.continueGame();
+        }
+        else {
+            this.pauseGame();
+        }
     };
 
-    TetrisGameController.prototype.pauseGame = function(target) {
-        console.debug('pauseGame() called');
+    /**
+     * Continue game that was previously paused by first updating
+     * button appearance and then continue Game Event Loop
+     */
+    TetrisGameController.prototype.continueGame = function(target) {
+        console.debug('continueGame() called');
 
         // Update button selector to .pause
         $('.play-pause').removeClass('play');
         $('.play-pause').addClass('pause');
-        $('.play-pause').attr('value', 'Play');
+        $('.play-pause').html('Pause');
 
         // Now actually restart interval, continue game where we left off
-
+        this.gameEventLoop.startEventLoop();
     };
 
+    /**
+     * Pause game by first updating button appearance and then
+     * stop the Game Event Loop
+     */
+    TetrisGameController.prototype.pauseGame = function(target) {
+        console.debug('pauseGame() called');
+
+        // Update button selector to .play
+        $('.play-pause').removeClass('pause');
+        $('.play-pause').addClass('play');
+        $('.play-pause').html('Play');
+
+        // Now actually pause Game Event Loop
+        this.gameEventLoop.stopEventLoop();
+    };
+
+    /**
+     * Move piece left by one position on canvas
+     */
+    TetrisGameController.prototype.movePieceLeft = function() {
+        this.gameCanvasManager.movePieceLeft();
+    };
+
+    /**
+     * Move piece right by one position on canvas
+     */
+    TetrisGameController.prototype.movePieceRight = function() {
+        this.gameCanvasManager.movePieceRight();
+    };
+
+    /**
+     * Move piece down by one position on canvas
+     */
+    TetrisGameController.prototype.movePieceDown = function() {
+        this.gameCanvasManager.movePieceDown();
+    };
+
+    /**
+     * Handle gameover event
+     */
     TetrisGameController.prototype.onGameOver = function() {
         window.alert('The Game is over!');
     };

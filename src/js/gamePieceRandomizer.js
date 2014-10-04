@@ -17,7 +17,7 @@ define(function(require, module, exports) {
     }
 
     GamePieceRandomizer.prototype.generate = function() {
-        return new BigSquare();
+        return new BigSquare(30);
     };
 
     return GamePieceRandomizer;
