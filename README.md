@@ -1,7 +1,7 @@
 tetris.js
 =========
 
-A browser-based Tetris application served via node.  Among the technologies used for this application are:
+A browser-based Tetris application served via Node.  Among the technologies used for this application are:
 
 <img height="50" src="http://gruntjs.com/img/grunt-logo-no-wordmark.svg">
 <img height="50" src="http://gruntjs.com/img/logo-handlebars.jpg">
