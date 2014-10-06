@@ -7,11 +7,15 @@ define(function(require, module, exports) {
         this.context = this.$canvas[0].getContext('2d');
         this.height = this.$canvas.height();
         this.width = this.$canvas.width();
+        this.squareLength = 30;
     }
 
     GameCanvasManager.prototype.initialize = function() {
         // Clear canvas
         this.context.clearRect(0, 0, this.width, this.height);
+
+        // Flag for checking if we've already checked for line completions
+        this.checkedForLineCompletion = false;
     };
 
     /**
@@ -65,6 +69,9 @@ define(function(require, module, exports) {
             // If we can't even add a new piece, then the game is over
             this.$canvas.trigger('gameover');
         }
+
+        // Reset checkedForLineCompletion flag
+        this.checkedForLineCompletion = false;
     };
 
     /**
@@ -91,6 +98,7 @@ define(function(require, module, exports) {
 
         // Now paint newly positioned squares
         _.each(newSquares, function(newSquare) {
+            that.context.fillStyle = that.currentPiece.getColor();
             that.context.fillRect(newSquare.x+2, newSquare.y+2, newSquare.length-4, newSquare.length-4);
             that.context.strokeRect(newSquare.x+1, newSquare.y+1, newSquare.length-2, newSquare.length-2);
         });
@@ -127,6 +135,9 @@ define(function(require, module, exports) {
         if ( this.canWeMovePieceDown() ) {
             this.advanceCurrentPiece();
         }
+
+        // Now we need to check if we can fuse lines
+        this.fuseLinesIfNeeded();
     };
 
     /**
@@ -224,6 +235,78 @@ define(function(require, module, exports) {
         }
         else {
             return false;
+        }
+    };
+
+    GameCanvasManager.prototype.fuseLinesIfNeeded = function() {
+        if (!this.canWeMovePieceDown() && !this.checkedForLineCompletion) {
+            var beginTime = Date.now();
+            // Get left-most squares that make up the current piece
+            // and check if each one completes a line
+            var that = this;
+            var fusedSquares = [];
+            _.each(this.currentPiece.getLeftMostSquares(), function(square) {
+                // Check if all squares to the left of this one
+                // has any empty slots...if so, continue to next
+                // left-most square
+                var squareToCheck = Square.generateNewSquareToTheLeft(square);
+                var foundEmptySpace = false;
+                while (squareToCheck.x - 10 > 0) {
+                    var colorOfLeftSquare = that.context.getImageData(squareToCheck.x+10, squareToCheck.y+10, 1, 1).data;
+                    if (_.isEqual(_.pick(colorOfLeftSquare, 0, 1, 2), {0:0, 1:0, 2:0})) {
+                        foundEmptySpace = true;
+                        break;
+                    }
+
+                    squareToCheck = Square.generateNewSquareToTheLeft(squareToCheck);
+                }
+
+                // If we've found an empty space, move on to the next square
+                if (foundEmptySpace) {
+                    return;
+                }
+
+                // Now check all squares to the right
+                squareToCheck = Square.generateNewSquareToTheRight(square);
+                foundEmptySpace = false;
+                while (squareToCheck.x + 10 < that.width) {
+                    var colorOfRightSquare = that.context.getImageData(squareToCheck.x+10, squareToCheck.y+10, 1, 1).data;
+                    if (_.isEqual(_.pick(colorOfRightSquare, 0, 1, 2), {0:0, 1:0, 2:0})) {
+                        foundEmptySpace = true;
+                        break;
+                    }
+
+                    squareToCheck = Square.generateNewSquareToTheRight(squareToCheck);
+                }
+
+                // If we haven't found an empty square then we know we've fused this line
+                if (!foundEmptySpace) {
+                    fusedSquares.push(square);
+                }
+            });
+
+            // If we found completed lines
+            var numOfCompletedLines = fusedSquares.length;
+            if (numOfCompletedLines) {
+                var topMostSquare = _.min(fusedSquares, function(square) { return square.y; });
+
+                // Clear lines
+                this.context.clearRect(0, topMostSquare.y, this.width, numOfCompletedLines * this.squareLength);
+
+                // Now shift everything down
+                var rowsToShiftDown = this.context.getImageData(0, 0, this.width, topMostSquare.y);
+                this.context.putImageData(rowsToShiftDown, 0, fusedSquares.length * this.squareLength);
+
+                // Notify anyone interested that numOfCompletedLines have been cleared
+                this.$canvas.trigger('linescleared', numOfCompletedLines);
+            }
+
+            // Mark as already checked
+            this.checkedForLineCompletion = true;
+
+            // Calculate execution time for logging purposes
+            var endTime = Date.now();
+            console.debug('GameCanvasManager.fusionLinesIfNeeded() - execution time: ', endTime - beginTime, 'ms');
         }
     };
 

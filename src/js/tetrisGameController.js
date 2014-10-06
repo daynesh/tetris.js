@@ -57,23 +57,29 @@ define(function(require, module, exports) {
         $('.right')             .on('click', _.bind(this.movePieceRight, this));
         // $('.rotate-left')       .on('click', this.rotatePieceLeft);
         // $('.rotate-right')      .on('click', this.rotatePieceRight);
-        $('.game-canvas')       .on('gameover', _.bind(this.onGameOver,  this));
 
         // Bind keys to certain functions
-        $(window).keydown(_.bind(function(e) {
-            switch (e.keyCode) {
+        $(window).off('keydown');
+        $(window).on('keydown', _.bind(function(e) {
+            switch (e.which) {
                 case 39: // the right key
                     this.movePieceRight();
-                    return false;
+                    break;
                 case 37: // the left key
                     this.movePieceLeft();
-                    return false;
+                    break;
                 case 40: // the down key
                     this.movePieceDown();
-                    return false;
+                    break;
+                default:
+                    return;
             }
-            return;
+            e.preventDefault();
         }, this));
+
+        // Custom events
+        $('.game-canvas')       .on('gameover',     _.bind(this.onGameOver,     this));
+        $('.game-canvas')       .on('linescleared', _.bind(this.onLinesCleared, this));
     };
 
     /**
@@ -161,6 +167,25 @@ define(function(require, module, exports) {
      */
     TetrisGameController.prototype.onGameOver = function() {
         window.alert('The Game is over!');
+    };
+
+    /**
+     * Lines have been cleared on the canvas
+     * @param {number} Number of lines that were cleared from the canvas
+     */
+    TetrisGameController.prototype.onLinesCleared = function(event, numOfLinesCleared) {
+        if (numOfLinesCleared) {
+            // Update Lines shown in the gameMetrics view
+            this.lines += numOfLinesCleared;
+            $('.game-metrics .lines').html(this.lines);
+
+            // Now check if we need to update the Level as well
+            var calculatedLevel = Math.floor(this.lines / 10);
+            if (this.level != calculatedLevel) {
+                this.level = calculatedLevel;
+                $('.game-metrics .level').html(this.level);
+            }
+        }
     };
 
     // Attach instantiated object to window

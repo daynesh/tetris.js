@@ -13,8 +13,10 @@ define(function(require, module, exports) {
     } 
 
     GameEventLoop.prototype.startEventLoop = function() {
+        // Advance piece now
+        this.advancePiece();
 
-        // Now start timer
+        // And start timer to advance the current piece periodically
         this.intervalID = window.setInterval(_.bind(this.advancePiece, this), this.interval);
     };
 
@@ -31,7 +33,7 @@ define(function(require, module, exports) {
         }
 
         // Check if we completed a line (or lines)
-        //this.canvasManager.
+        this.canvasManager.fuseLinesIfNeeded();
     };
 
     GameEventLoop.prototype.stopEventLoop = function() {
