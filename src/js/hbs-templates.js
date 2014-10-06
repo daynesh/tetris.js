@@ -35,7 +35,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"gameplay-container\">\n    <p class=\"game-label\">Game Play</p>\n    <div class=\"game-canvas\"></div>\n</div>";
+  return "<div class=\"gameplay-container\">\n    <p class=\"game-label\">Game Play</p>\n    <canvas width=\"300\" height=\"420\" class=\"game-canvas\"></canvas>\n</div>";
   });
 
 return this["JST"];
