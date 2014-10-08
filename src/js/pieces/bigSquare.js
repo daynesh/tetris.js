@@ -1,6 +1,6 @@
 define(function(require, module, exports) {
     
-    var Square = require('src/js/square');
+    var Square = require('src/js/pieces/square');
 
     function BigSquare(lengthOfSquare) {
         // Initial positions of pieces

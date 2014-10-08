@@ -1,6 +1,6 @@
 define(function(require, module, exports) {
 
-    var BigSquare = require('src/js/bigSquare');
+    var BigSquare = require('src/js/pieces/bigSquare');
 
     var gamePieceLibrary = [
             bigSquare,
