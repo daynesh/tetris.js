@@ -1,6 +1,6 @@
 define(function(require, module, exports) {
     
-    var Square = require('src/js/square');
+    var Square = require('src/js/pieces/square');
 
     function reverseLPiece(lengthOfSquare) {
         // Initial positions of pieces
@@ -35,27 +35,24 @@ define(function(require, module, exports) {
      * squares is not occupied)
      */
     reverseLPiece.prototype.getBottomMostSquares = function() {
-        var bottomMostSquares = [];
+        var squaresMap = {};
 
         _.each(this.indivSquares, function(square) {
-            // if bottomMostSquares is empty then put square in it
-            if (bottomMostSquares.length === 0) {
-                bottomMostSquares.push(square);
+            // If this square's x-coord is in squaresMap
+            if (square.x in squaresMap) {
+                // If this square is below what's in squaresMap
+                // then replace square at this position of squaresMap
+                if (square.y < squaresMap[square.x].y) {
+                    squaresMap[square.x] = square;
+                }
             }
+            // If not in squaresMap, then add square to squaresMap
             else {
-                //  if square.y > bottomMostSquares[0].y then clear bottomMostSquares and add this square
-                if (square.y > bottomMostSquares[0].y) {
-                    bottomMostSquares = [];
-                    bottomMostSquares.push(square);
-                }
-                //  else if square.y === bottomMostSquares[0].y then push square to bottomMostSquares
-                else if (square.y === bottomMostSquares[0].y) {
-                    bottomMostSquares.push(square);
-                }
+                squaresMap[square.x] = square;
             }
         });
 
-        return bottomMostSquares;
+        return _.values(squaresMap);
     };
 
     /**
@@ -64,25 +61,24 @@ define(function(require, module, exports) {
      * position
      */
     reverseLPiece.prototype.getLeftMostSquares = function() {
-        var leftMostSquares = [];
+        var squaresMap = {};
 
         _.each(this.indivSquares, function(square) {
-            // if leftMostSquares is empty then put square in it
-            if (leftMostSquares.length === 0) {
-                leftMostSquares.push(square);
+            // If this square's y-coord is in squaresMap
+            if (square.y in squaresMap) {
+                // If this square is 'more' left than what's in squaresMap
+                // then replace square at this position of squaresMap
+                if (square.x < squaresMap[square.y].x) {
+                    squaresMap[square.y] = square;
+                }
             }
+            // If not in squaresMap, then add square to squaresMap
             else {
-                //  if square.x < leftMostSquares[0].x then clear leftMostSquares and add this square
-                if (square.x < leftMostSquares[0].x) {
-                    leftMostSquares = [];
-                    leftMostSquares.push(square);
-                }
-                //  else if square.x === leftMostSquares[0].x then push square to leftMostSquares
-                else if (square.x === leftMostSquares[0].x) {
-                    leftMostSquares.push(square);
-                }
+                squaresMap[square.y] = square;
             }
         });
+
+        return _.values(squaresMap);
     };
 
     /**
@@ -91,25 +87,24 @@ define(function(require, module, exports) {
      * position
      */
     reverseLPiece.prototype.getRightMostSquares = function() {
-        var rightMostSquares = [];
+        var squaresMap = {};
 
         _.each(this.indivSquares, function(square) {
-            // if rightMostSquares is empty then put square in it
-            if (rightMostSquares.length === 0) {
-                rightMostSquares.push(square);
+            // If this square's y-coord is in squaresMap
+            if (square.y in squaresMap) {
+                // If this square is 'more' right than what's in squaresMap
+                // then replace square at this position of squaresMap
+                if (square.x > squaresMap[square.y].x) {
+                    squaresMap[square.y] = square;
+                }
             }
+            // If not in squaresMap, then add square to squaresMap
             else {
-                //  if square.x > rightMostSquares[0].x then clear rightMostSquares and add this square
-                if (square.x > rightMostSquares[0].x) {
-                    rightMostSquares = [];
-                    rightMostSquares.push(square);
-                }
-                //  else if square.x === rightMostSquares[0].x then push square to rightMostSquares
-                else if (square.x === rightMostSquares[0].x) {
-                    rightMostSquares.push(square);
-                }
+                squaresMap[square.y] = square;
             }
         });
+
+        return _.values(squaresMap);
     };
 
     return reverseLPiece;

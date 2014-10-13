@@ -1,6 +1,7 @@
 define(function(require, module, exports) {
 
-    var BigSquare = require('src/js/pieces/bigSquare');
+    var BigSquare       = require('src/js/pieces/bigSquare');
+    var ReverseLPiece   = require('src/js/pieces/reverseLPiece');
 
     var gamePieceLibrary = [
             bigSquare,
@@ -18,6 +19,7 @@ define(function(require, module, exports) {
 
     GamePieceRandomizer.prototype.generate = function() {
         return new BigSquare(30);
+        //return new ReverseLPiece(30);
     };
 
     return GamePieceRandomizer;
