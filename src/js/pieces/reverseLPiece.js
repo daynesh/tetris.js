@@ -42,7 +42,7 @@ define(function(require, module, exports) {
             if (square.x in squaresMap) {
                 // If this square is below what's in squaresMap
                 // then replace square at this position of squaresMap
-                if (square.y < squaresMap[square.x].y) {
+                if (square.y > squaresMap[square.x].y) {
                     squaresMap[square.x] = square;
                 }
             }
