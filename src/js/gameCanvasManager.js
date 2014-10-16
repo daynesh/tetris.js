@@ -141,6 +141,24 @@ define(function(require, module, exports) {
     };
 
     /**
+     * Rotate piece counter-clockwise
+     */
+    GameCanvasManager.prototype.rotatePieceLeft = function() {
+        // if ( this.canWeRotatePieceLeft() ) {
+        //     this.rotateCurrentPieceLeft();
+        // }
+    };
+
+    /**
+     * Rotate piece clockwise
+     */
+    GameCanvasManager.prototype.rotatePieceRight = function() {
+        // if ( this.canWeRotatePieceRight() ) {
+        //     this.rotateCurrentPieceRightt();
+        // }
+    };
+
+    /**
      * Check whether we can move the currentPiece one position to the left
      */
     GameCanvasManager.prototype.canWeMovePieceLeft = function() {
