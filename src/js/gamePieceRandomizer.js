@@ -8,27 +8,27 @@ define(function(require, module, exports) {
     var SPiece          = require('src/js/pieces/sPiece');
     var ZPiece          = require('src/js/pieces/zPiece');
 
-    var gamePieceLibrary = [
-            bigSquare,
-            longRectangle,
-            sPiece,
-            zPiece,
-            middleFinger,
-            lPiece,
-            reverseLPiece
-    ];
-
     function GamePieceRandomizer() {
-
+        this.gamePieceLibrary = [
+            BigSquare,
+            LongRectangle,
+            LPiece,
+            ZPiece,
+            MiddleFinger,
+            SPiece,
+            ReverseLPiece
+        ];
     }
 
+    /**
+     * Generate a piece at random
+     */
     GamePieceRandomizer.prototype.generate = function() {
-        //return new BigSquare(30);
-        //return new LongRectangle(30);
-        //return new LPiece(30);
+        var numOfPieces = this.gamePieceLibrary.length;
+        var GamePiece = this.gamePieceLibrary[Math.floor(Math.random()*numOfPieces)];
+
+        //return new GamePiece(30);
         return new MiddleFinger(30);
-        //return new ReverseLPiece(30);
-        //return new SPiece(30);
     };
 
     return GamePieceRandomizer;
