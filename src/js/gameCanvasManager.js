@@ -133,15 +133,6 @@ define(function(require, module, exports) {
     };
 
     /**
-     * Rotate piece counter-clockwise
-     */
-    GameCanvasManager.prototype.rotatePieceLeft = function() {
-        // if ( this.canWeRotatePieceLeft() ) {
-        //     this.rotateCurrentPieceLeft();
-        // }
-    };
-
-    /**
      * Rotate piece clockwise
      */
     GameCanvasManager.prototype.rotatePieceRight = function() {
@@ -153,6 +144,36 @@ define(function(require, module, exports) {
 
             // Check whether we can pain any of the newly rotated squares
             var that = this;
+            var canRotate = this.canSquaresBePainted(newSquares);
+
+            if (canRotate) {
+                // Now paint new squares
+                this.paintSquares(newSquares, this.currentPiece.getColor());
+
+                // Finally, update currentPiece
+                this.currentPiece.setIndivSquares(newSquares);
+
+                // Now we need to check if we can fuse lines
+                this.fuseLinesIfNeeded();
+            }
+            else {
+                console.debug('Can\'t rotate current piece');
+                this.paintSquares(this.currentPiece.getIndivSquares(), this.currentPiece.getColor());
+            }
+         }
+    };
+
+    /**
+     * Rotate piece counter-clockwise
+     */
+    GameCanvasManager.prototype.rotatePieceLeft = function() {
+        if (this.currentPiece) {
+            var newSquares = this.currentPiece.getSquaresAfterRotatingLeft();
+
+            // Clear currentPiece
+            this.clearSquares( this.currentPiece.getIndivSquares() );
+
+            // Check whether we can pain any of the newly rotated squares
             var canRotate = this.canSquaresBePainted(newSquares);
 
             if (canRotate) {

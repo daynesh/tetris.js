@@ -11,6 +11,8 @@ define(function(require, module, exports) {
             new Square(120, lengthOfSquare, lengthOfSquare),
             new Square(150, lengthOfSquare, lengthOfSquare)
         ];
+
+        this.lengthOfSquare = lengthOfSquare;
     }
 
     /**
@@ -24,6 +26,10 @@ define(function(require, module, exports) {
      */
     BigSquare.prototype.getColor = function() {
         return 'purple';
+    };
+
+    BigSquare.prototype.getSquaresAfterRotatingRight = function() {
+        return this.getIndivSquares();
     };
 
     return BigSquare; 

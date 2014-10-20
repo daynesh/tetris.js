@@ -28,44 +28,6 @@ define(function(require, module, exports) {
         return 'aliceblue';
     };
 
-    MiddleFinger.prototype.getSquaresAfterRotatingRight = function() {
-        // First find origin square
-        var origin = this.findOriginSquare();
-
-        // Next move all surrounding squares to new positions
-        var otherSquares = _.reject(this.indivSquares, function(square) {
-            return _.isEqual(origin, square);
-        });
-
-        var squaresToReturn = [origin];
-        var that = this;
-        // Now move squares to new rotated positions
-        _.each(otherSquares, function(square) {
-            if (square.y === origin.y) {
-                // square is to the right of origin
-                if (square.x - origin.x === that.lengthOfSquare) {
-                    squaresToReturn.push(new Square(origin.x, origin.y+that.lengthOfSquare, that.lengthOfSquare));
-                }
-                // square is to the left of origin
-                else if (origin.x - square.x === that.lengthOfSquare) {
-                    squaresToReturn.push(new Square(origin.x, origin.y-that.lengthOfSquare, that.lengthOfSquare));
-                }
-            }
-            else if (square.x === origin.x) {
-                // square is above origin
-                if (origin.y - square.y === that.lengthOfSquare) {
-                    squaresToReturn.push(new Square(origin.x+that.lengthOfSquare, origin.y, that.lengthOfSquare));
-                }
-                // square is below origin
-                else if (square.y - origin.y === that.lengthOfSquare) {
-                    squaresToReturn.push(new Square(origin.x-that.lengthOfSquare, origin.y, that.lengthOfSquare));
-                }
-            }
-        });
-
-        return squaresToReturn;
-    };
-
     MiddleFinger.prototype.findOriginSquare = function() {
         var candidateSquares = [];
         var that = this;

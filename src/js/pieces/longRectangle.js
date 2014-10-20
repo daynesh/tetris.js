@@ -11,6 +11,8 @@ define(function(require, module, exports) {
             new Square(150, 0, lengthOfSquare),
             new Square(180, 0, lengthOfSquare)
         ];
+
+        this.lengthOfSquare = lengthOfSquare;
     }
 
     /**
@@ -24,6 +26,23 @@ define(function(require, module, exports) {
      */
     LongRectangle.prototype.getColor = function() {
         return 'orange';
+    };
+
+    LongRectangle.prototype.findOriginSquare = function() {
+        var sortedSquares;
+
+        // If this is a vertical rectangle
+        if (this.indivSquares[0].x === this.indivSquares[1].x) {
+            // Find 2nd from the topmost square
+            sortedSquares = _.sortBy(this.indivSquares, function(square) { return square.y; });
+        }
+        // If this is a horizontal rectangle
+        else {
+            // Find 2nd from the leftmost square
+            sortedSquares = _.sortBy(this.indivSquares, function(square) { return square.x; });
+        }
+
+        return sortedSquares[1];
     };
 
     return LongRectangle;
