@@ -137,22 +137,9 @@ define(function(require, module, exports) {
      */
     GameCanvasManager.prototype.rotatePieceRight = function() {
          if (this.currentPiece) {
-            console.log('GameCanvasManager.rotatePieceRight() - currentPiece: ');
-            _.each(this.currentPiece.getIndivSquares(), function(square) {
-                console.log('  sq: ', square);
-            });
-
             var newSquares = this.currentPiece.getSquaresAfterRotatingRight();
-            console.log('New squares: ');
-            _.each(newSquares, function(s) {
-                console.log(' s: ',s);
-            });
 
             // Clear currentPiece
-            console.log('Clearing squares: ');
-            _.each(this.currentPiece.getIndivSquares(), function(square) {
-                console.log('  sq: ', square);
-            });
             this.clearSquares( this.currentPiece.getIndivSquares() );
 
             // Check whether we can pain any of the newly rotated squares
@@ -164,15 +151,10 @@ define(function(require, module, exports) {
                 this.paintSquares(newSquares, this.currentPiece.getColor());
 
                 // Finally, update currentPiece
-                console.log('Setting current piece to: ', newSquares);
                 this.currentPiece.setIndivSquares(newSquares);
 
                 // Now we need to check if we can fuse lines
                 this.fuseLinesIfNeeded();
-                console.log('this.currentPiece: ');
-                _.each(this.currentPiece.getIndivSquares(), function(sq) {
-                    console.log('  sq: ', sq);
-                });
             }
             else {
                 console.debug('Can\'t rotate current piece');
@@ -311,7 +293,6 @@ define(function(require, module, exports) {
 
     GameCanvasManager.prototype.canWeRotatePieceRight = function() {
         if (this.currentPiece) {
-            console.log('GameCanvasManager.canWeRotatePieceRight() called');
             var squares = this.currentPiece.getSquaresAfterRotatingRight();
 
             return true;
@@ -431,7 +412,6 @@ define(function(require, module, exports) {
     GameCanvasManager.prototype.clearSquares = function(squaresToClear) {
         var that = this;
         _.each(squaresToClear, function(square) {
-            console.log('Clearing square: ', square);
             that.context.clearRect(square.x, square.y, square.length, square.length);
         });
     };

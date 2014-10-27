@@ -37,29 +37,21 @@ define(function(require, module, exports) {
             // Also shift every piece down by one position
             var squaresShiftedDown = [];
             _.each(squaresToReturn, function(square) {
-                var shiftedSquare = square;
-                shiftedSquare.y = shiftedSquare.y + square.length;
-                 squaresShiftedDown.push(shiftedSquare);
+                var shiftedSquare = new Square(square.x, square.y + square.length, square.length);
+                squaresShiftedDown.push(shiftedSquare);
             });
 
-            // var squaresShiftedDown = _.map(squaresToReturn, function(square) {
-            //      square.y = square.y + that.lengthOfSquare;
-            //      return square;
-            // });
-
-            // console.log('Shifted:');
-            // _.each(squaresShiftedDown, function(s) {
-            //     console.log('  s: ', s);
-            // });
-
-            // squaresToReturn = squaresShiftedDown;
+            squaresToReturn = squaresShiftedDown;
         }
         
         return squaresToReturn;
     };
 
+    /**
+     * Identical to getSquaresAfterRotatingRight()
+     */
     SPiece.prototype.getSquaresAfterRotatingLeft = function() {
-        
+        return this.getSquaresAfterRotatingRight();
     };
 
     SPiece.prototype.isVerticallyPositioned = function() {
