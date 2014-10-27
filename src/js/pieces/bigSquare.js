@@ -28,7 +28,20 @@ define(function(require, module, exports) {
         return 'purple';
     };
 
+    /**
+     *  Return square used as rotating origin
+     */
+    BigSquare.prototype.findOriginSquare = function() {
+        // Doesn't matter what square is returned since
+        // rotating a Big Square doesn't amount to anything
+        return this.indivSquares[0];
+    };
+
     BigSquare.prototype.getSquaresAfterRotatingRight = function() {
+        return this.getIndivSquares();
+    };
+
+    BigSquare.prototype.getSquaresAfterRotatingLeft = function() {
         return this.getIndivSquares();
     };
 

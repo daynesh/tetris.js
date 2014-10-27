@@ -28,6 +28,9 @@ define(function(require, module, exports) {
         return 'orange';
     };
 
+    /**
+     *  Return square used as rotating origin
+     */
     LongRectangle.prototype.findOriginSquare = function() {
         var sortedSquares;
 

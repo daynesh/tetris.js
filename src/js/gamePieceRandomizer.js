@@ -12,11 +12,11 @@ define(function(require, module, exports) {
         this.gamePieceLibrary = [
             BigSquare,
             LongRectangle,
-            //LPiece,
+            LPiece,
             //ZPiece,
             MiddleFinger,
             //SPiece,
-            //ReverseLPiece
+            ReverseLPiece
         ];
     }
 
@@ -30,7 +30,7 @@ define(function(require, module, exports) {
         var GamePiece = this.gamePieceLibrary[randomIndex];
 
         //return new GamePiece(30);
-        return new MiddleFinger(30);
+        return new SPiece(30);
     };
 
     return GamePieceRandomizer;

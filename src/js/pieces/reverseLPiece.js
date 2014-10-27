@@ -26,5 +26,30 @@ define(function(require, module, exports) {
         return 'crimson';
     };
 
+    /**
+     *  Return square used as rotating origin
+     */
+    ReverseLPiece.prototype.findOriginSquare = function() {
+        // Find square that's second from the top or left
+        // depending on rotational state
+        var sortedSquares;
+
+        var groupedByRow = _.groupBy(this.indivSquares, function(square) { return square.x; });
+        var groupedByColumn = _.groupBy(this.indivSquares, function(square) { return square.y; });
+
+        var sameColumn = _.map(groupedByColumn, function(squares) { return squares[0]; });
+        var sameRow = _.map(groupedByRow, function(squares) { return squares[0]; });
+
+        // If this is a horizonally-rotated piece (___| or |---)
+        if (sameRow.length === 3) {
+            sortedSquares = _.sortBy(sameRow, function(square) { return square.x; });
+        }
+        else {
+            sortedSquares = _.sortBy(sameColumn, function(square) { return square.y; }); 
+        }
+
+        return sortedSquares[1];
+    };
+
     return ReverseLPiece;
 });

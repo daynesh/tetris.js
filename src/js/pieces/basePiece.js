@@ -99,7 +99,7 @@ define(function(require, module, exports) {
         var origin = this.findOriginSquare();
         console.debug('Origin: ', origin);
 
-        // Next move all surrounding squares to new positions
+        // Next get all surrounding squares to new positions
         var otherSquares = _.reject(this.indivSquares, function(square) {
             return _.isEqual(origin, square);
         });
@@ -117,28 +117,24 @@ define(function(require, module, exports) {
                 // Move square to IV quadrant
                 newSquare = that.translateToQuadrantIV(origin, distXFromOrigin, distYFromOrigin);
                 squaresToReturn.push(newSquare);
-                console.debug('Moving square (I): ', square, ' to: ', newSquare);
             }
             // If square is in origin's II quadrant
             else if ((square.x < origin.x) && (square.y <= origin.y)) {
                 // Move square to I quadrant
                 newSquare = that.translateToQuadrantI(origin, distXFromOrigin, distYFromOrigin);
                 squaresToReturn.push(newSquare);
-                console.debug('Moving square (II): ', square, ' to: ', newSquare);
             }
             // If square is in origin's III quadrant
             else if ((square.x <= origin.x) && (square.y > origin.y)) {
                 // Move square to II quadrant
                 newSquare = that.translateToQuadrantII(origin, distXFromOrigin, distYFromOrigin);
                 squaresToReturn.push(newSquare);
-                console.debug('Moving square (III): ', square, ' to: ', newSquare);
             }
             // If square is in origin's IV quadrant
             else {
                 // Move square to III quadrant
                 newSquare = that.translateToQuadrantIII(origin, distXFromOrigin, distYFromOrigin);
                 squaresToReturn.push(newSquare);
-                console.debug('Moving square (IV): ', square, ' to: ', newSquare);
             }
         });
 
@@ -168,28 +164,24 @@ define(function(require, module, exports) {
                 // Move square to II quadrant
                 newSquare = that.translateToQuadrantII(origin, distXFromOrigin, distYFromOrigin);
                 squaresToReturn.push(newSquare);
-                console.debug('Moving square (I): ', square, ' to: ', newSquare);
             }
             // If square is in origin's II quadrant
             else if ((square.x < origin.x) && (square.y <= origin.y)) {
                 // Move square to III quadrant
                 newSquare = that.translateToQuadrantIII(origin, distXFromOrigin, distYFromOrigin);
                 squaresToReturn.push(newSquare);
-                console.debug('Moving square (II): ', square, ' to: ', newSquare);
             }
             // If square is in origin's III quadrant
             else if ((square.x <= origin.x) && (square.y > origin.y)) {
                 // Move square to IV quadrant
                 newSquare = that.translateToQuadrantIV(origin, distXFromOrigin, distYFromOrigin);
                 squaresToReturn.push(newSquare);
-                console.debug('Moving square (III): ', square, ' to: ', newSquare);
             }
             // If square is in origin's IV quadrant
             else {
                 // Move square to I quadrant
                 newSquare = that.translateToQuadrantI(origin, distXFromOrigin, distYFromOrigin);
                 squaresToReturn.push(newSquare);
-                console.debug('Moving square (IV): ', square, ' to: ', newSquare);
             }
         });
 

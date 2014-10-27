@@ -28,6 +28,9 @@ define(function(require, module, exports) {
         return 'aliceblue';
     };
 
+    /**
+     *  Return square used as rotating origin
+     */
     MiddleFinger.prototype.findOriginSquare = function() {
         var candidateSquares = [];
         var that = this;
