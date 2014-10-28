@@ -71,7 +71,11 @@ define(function(require, module, exports) {
                 case 40: // the down key
                     this.movePieceDown();
                     break;
+                case 32: // the space key
+                    this.rotatePieceRight();
+                    break;
                 default:
+                    console.log('Key pressed: ', e.which);
                     return;
             }
             e.preventDefault();

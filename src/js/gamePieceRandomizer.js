@@ -13,9 +13,9 @@ define(function(require, module, exports) {
             BigSquare,
             LongRectangle,
             LPiece,
-            //ZPiece,
+            ZPiece,
             MiddleFinger,
-            //SPiece,
+            SPiece,
             ReverseLPiece
         ];
     }
@@ -29,8 +29,7 @@ define(function(require, module, exports) {
         console.debug('Random index: ', randomIndex);
         var GamePiece = this.gamePieceLibrary[randomIndex];
 
-        //return new GamePiece(30);
-        return new SPiece(30);
+        return new GamePiece(30);
     };
 
     return GamePieceRandomizer;
