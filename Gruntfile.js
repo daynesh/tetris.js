@@ -89,7 +89,6 @@ module.exports = function(grunt) {
                 ],
                 options: {
                     specs: 'tests/spec/*Spec.js',
-                    keepRunner: true,
                     template: require('grunt-template-jasmine-requirejs'),
                     templateOptions: {
                         requireConfigFile: 'src/js/require-config.js'
