@@ -55,8 +55,8 @@ define(function(require, module, exports) {
         $('.left')              .on('click', _.bind(this.movePieceLeft,  this));
         $('.down')              .on('click', _.bind(this.movePieceDown,  this));
         $('.right')             .on('click', _.bind(this.movePieceRight, this));
-        // $('.rotate-left')       .on('click', this.rotatePieceLeft);
-        // $('.rotate-right')      .on('click', this.rotatePieceRight);
+        $('.rotate-left')       .on('click', _.bind(this.rotatePieceLeft, this));
+        $('.rotate-right')      .on('click', _.bind(this.rotatePieceRight, this));
 
         // Bind keys to certain functions
         $(window).off('keydown');
@@ -71,7 +71,11 @@ define(function(require, module, exports) {
                 case 40: // the down key
                     this.movePieceDown();
                     break;
+                case 32: // the space key
+                    this.rotatePieceRight();
+                    break;
                 default:
+                    console.log('Key pressed: ', e.which);
                     return;
             }
             e.preventDefault();
@@ -167,6 +171,20 @@ define(function(require, module, exports) {
      */
     TetrisGameController.prototype.onGameOver = function() {
         window.alert('The Game is over!');
+    };
+
+    /**
+     * Rotate piece counter-clockwise
+     */
+    TetrisGameController.prototype.rotatePieceLeft = function() {
+        this.gameCanvasManager.rotatePieceLeft();
+    };
+
+    /**
+     * Rotate piece clockwise
+     */
+    TetrisGameController.prototype.rotatePieceRight = function() {
+        this.gameCanvasManager.rotatePieceRight();
     };
 
     /**

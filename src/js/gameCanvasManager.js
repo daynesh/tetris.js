@@ -1,6 +1,6 @@
 define(function(require, module, exports) {
 
-    var Square = require('src/js/square');
+    var Square = require('src/js/pieces/square');
 
     function GameCanvasManager() {
         this.$canvas = $('.game-canvas');
@@ -59,11 +59,7 @@ define(function(require, module, exports) {
             this.currentPiece = newPiece;
 
             // Now paint the piece on the canvas
-            this.context.fillStyle = this.currentPiece.getColor();
-            _.each(indivSquares, function(square) {
-                that.context.fillRect(square.x+2, square.y+2, square.length-4, square.length-4);
-                that.context.strokeRect(square.x+1, square.y+1, square.length-2, square.length-2);
-            });
+            this.paintSquares(indivSquares, this.currentPiece.getColor());
         }
         else {
             // If we can't even add a new piece, then the game is over
@@ -97,11 +93,7 @@ define(function(require, module, exports) {
         });
 
         // Now paint newly positioned squares
-        _.each(newSquares, function(newSquare) {
-            that.context.fillStyle = that.currentPiece.getColor();
-            that.context.fillRect(newSquare.x+2, newSquare.y+2, newSquare.length-4, newSquare.length-4);
-            that.context.strokeRect(newSquare.x+1, newSquare.y+1, newSquare.length-2, newSquare.length-2);
-        });
+        this.paintSquares(newSquares, this.currentPiece.getColor());
 
         // Finally, update currentPiece
         this.currentPiece.setIndivSquares(newSquares);
@@ -138,6 +130,67 @@ define(function(require, module, exports) {
 
         // Now we need to check if we can fuse lines
         this.fuseLinesIfNeeded();
+    };
+
+    /**
+     * Rotate piece clockwise
+     */
+    GameCanvasManager.prototype.rotatePieceRight = function() {
+         if (this.currentPiece) {
+            var newSquares = this.currentPiece.getSquaresAfterRotatingRight();
+
+            // Clear currentPiece
+            this.clearSquares( this.currentPiece.getIndivSquares() );
+
+            // Check whether we can pain any of the newly rotated squares
+            var that = this;
+            var canRotate = this.canSquaresBePainted(newSquares);
+
+            if (canRotate) {
+                // Now paint new squares
+                this.paintSquares(newSquares, this.currentPiece.getColor());
+
+                // Finally, update currentPiece
+                this.currentPiece.setIndivSquares(newSquares);
+
+                // Now we need to check if we can fuse lines
+                this.fuseLinesIfNeeded();
+            }
+            else {
+                console.debug('Can\'t rotate current piece');
+                this.paintSquares(this.currentPiece.getIndivSquares(), this.currentPiece.getColor());
+            }
+         }
+    };
+
+    /**
+     * Rotate piece counter-clockwise
+     */
+    GameCanvasManager.prototype.rotatePieceLeft = function() {
+        if (this.currentPiece) {
+            var newSquares = this.currentPiece.getSquaresAfterRotatingLeft();
+
+            // Clear currentPiece
+            this.clearSquares( this.currentPiece.getIndivSquares() );
+
+            // Check whether we can pain any of the newly rotated squares
+            var canRotate = this.canSquaresBePainted(newSquares);
+
+            if (canRotate) {
+                // Now paint new squares
+                this.paintSquares(newSquares, this.currentPiece.getColor());
+
+                // Finally, update currentPiece
+                this.currentPiece.setIndivSquares(newSquares);
+
+                // Now we need to check if we can fuse lines
+                this.fuseLinesIfNeeded();
+            }
+            else {
+                console.debug('Can\'t rotate current piece');
+                this.paintSquares(this.currentPiece.getIndivSquares(), this.currentPiece.getColor());
+            }
+         }
     };
 
     /**
@@ -238,6 +291,11 @@ define(function(require, module, exports) {
         }
     };
 
+    /**
+     * Function for checking to see if the current piece, after moving to its new position,
+     * completed a line or more. If it did, then go ahead and remove those lines and,
+     * subsequently, move all remaining pieces down
+     */
     GameCanvasManager.prototype.fuseLinesIfNeeded = function() {
         if (!this.canWeMovePieceDown() && !this.checkedForLineCompletion) {
             var beginTime = Date.now();
@@ -308,6 +366,65 @@ define(function(require, module, exports) {
             var endTime = Date.now();
             console.debug('GameCanvasManager.fusionLinesIfNeeded() - execution time: ', endTime - beginTime, 'ms');
         }
+    };
+
+    /**
+     * Function to check whether any of the squares in the squaresToCheck array
+     * are either occupied or outside the canvas
+     */
+    GameCanvasManager.prototype.canSquaresBePainted = function(squaresToCheck) {
+        var that = this;
+        return _.every(squaresToCheck, function(square) {
+            // Is this piece below the bottom of the canvas
+            if (square.y+10 > that.height) {
+                return false;
+            }
+            // Is this piece above the top of the canvas
+            else if (square.y+10 < 0) {
+                return false;
+            }
+            // Is this piece outside of the left rail
+            else if (square.x + 10 < 0) {
+                return false;
+            }
+            // Is this piece outside of the right rail
+            else if (square.x+10 > that.width) {
+                return false;
+            }
+
+            // Now ensure that the square below is empty (i.e., has a color of white)
+            var colorOfSquare = that.context.getImageData(square.x+10, square.y+10 + square.length, 1, 1).data;
+            var white = {0:0, 1:0, 2:0};
+            if (_.isEqual(_.pick(colorOfSquare, 0, 1, 2), white)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+    };
+
+    /**
+     * Function to clear an array of squares
+     */
+    GameCanvasManager.prototype.clearSquares = function(squaresToClear) {
+        var that = this;
+        _.each(squaresToClear, function(square) {
+            that.context.clearRect(square.x, square.y, square.length, square.length);
+        });
+    };
+
+    /**
+     * Function to paint squares on canvas
+     */
+    GameCanvasManager.prototype.paintSquares = function(squaresToPaint, fillColor) {
+        this.context.fillStyle = fillColor;
+
+        var that = this;
+        _.each(squaresToPaint, function(square) {
+            that.context.fillRect(square.x+2, square.y+2, square.length-4, square.length-4);
+            that.context.strokeRect(square.x+1, square.y+1, square.length-2, square.length-2);
+        });
     };
 
     return GameCanvasManager;
