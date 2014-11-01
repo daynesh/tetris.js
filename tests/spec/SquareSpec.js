@@ -6,11 +6,27 @@ describe('Square', function() {
         square = new Square(120, 30, 30);
     });
 
-    it ('should be able to move square to the right', function() {
-        var squaresToTheRight = Square.generateNewSquareToTheRight(square);
+    it('should be able to move square to the right', function() {
+        var newSquare = Square.generateNewSquareToTheRight(square);
 
-        expect(squaresToTheRight.x).toEqual(square.x+30);
-        expect(squaresToTheRight.y).toEqual(square.y);
-        expect(squaresToTheRight.length).toEqual(square.length);
+        expect(newSquare.x).toEqual(square.x+30);
+        expect(newSquare.y).toEqual(square.y);
+        expect(newSquare.length).toEqual(square.length);
+    });
+
+    it('should be able to move square to the left', function() {
+        var newSquare = Square.generateNewSquareToTheLeft(square);
+
+        expect(newSquare.x).toEqual(square.x-30);
+        expect(newSquare.y).toEqual(square.y);
+        expect(newSquare.length).toEqual(square.length);
+    });
+
+    it('should be able to move square down', function() {
+        var newSquare = Square.generateNewSquareBelow(square);
+
+        expect(newSquare.x).toEqual(square.x);
+        expect(newSquare.y).toEqual(square.y+30);
+        expect(newSquare.length).toEqual(square.length);
     });
 });
