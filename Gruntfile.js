@@ -81,6 +81,22 @@ module.exports = function(grunt) {
                 tasks: ['build']
             }
         },
+        // Config for jasmine task
+        jasmine: {
+            unittests: {
+                src: [
+                    'src/js/pieces/square.js'
+                ],
+                options: {
+                    specs: 'tests/spec/*Spec.js',
+                    keepRunner: true,
+                    template: require('grunt-template-jasmine-requirejs'),
+                    templateOptions: {
+                        requireConfigFile: 'src/js/require-config.js'
+                    }
+                }
+            }
+        }
     });
 
     // Load external grunt plugins
@@ -90,8 +106,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-handlebars');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     // Available tasks
+    grunt.registerTask('travis', ['jasmine']);
     grunt.registerTask('default', ['clean', 'sass', 'jshint', 'requirejs']);
     grunt.registerTask('build', ['default']);
+    grunt.registerTask('test', ['jasmine']);
 };
