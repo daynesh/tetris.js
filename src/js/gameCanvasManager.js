@@ -291,17 +291,11 @@ define(function(require, module, exports) {
         }
     };
 
-    GameCanvasManager.prototype.canWeRotatePieceRight = function() {
-        if (this.currentPiece) {
-            var squares = this.currentPiece.getSquaresAfterRotatingRight();
-
-            return true;
-        }
-        else {
-            return false;
-        }
-    };
-
+    /**
+     * Function for checking to see if the current piece, after moving to its new position,
+     * completed a line or more. If it did, then go ahead and remove those lines and,
+     * subsequently, move all remaining pieces down
+     */
     GameCanvasManager.prototype.fuseLinesIfNeeded = function() {
         if (!this.canWeMovePieceDown() && !this.checkedForLineCompletion) {
             var beginTime = Date.now();
@@ -383,6 +377,10 @@ define(function(require, module, exports) {
         return _.every(squaresToCheck, function(square) {
             // Is this piece below the bottom of the canvas
             if (square.y+10 > that.height) {
+                return false;
+            }
+            // Is this piece above the top of the canvas
+            else if (square.y+10 < 0) {
                 return false;
             }
             // Is this piece outside of the left rail
