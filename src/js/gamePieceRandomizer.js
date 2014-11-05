@@ -26,7 +26,6 @@ define(function(require, module, exports) {
     GamePieceRandomizer.prototype.generate = function() {
         var numOfPieces = this.gamePieceLibrary.length;
         var randomIndex = Math.floor(Math.random()*numOfPieces);
-        console.debug('Random index: ', randomIndex);
         var GamePiece = this.gamePieceLibrary[randomIndex];
 
         return new GamePiece(30);

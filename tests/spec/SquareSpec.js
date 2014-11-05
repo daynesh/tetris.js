@@ -1,4 +1,4 @@
-describe('Square', function() {
+describe('Basic Square', function() {
     var Square = require('src/js/pieces/square');
     var square;
 
@@ -6,7 +6,7 @@ describe('Square', function() {
         square = new Square(120, 30, 30);
     });
 
-    it('should be able to move square to the right', function() {
+    it('should be able to move correctly to the right', function() {
         var newSquare = Square.generateNewSquareToTheRight(square);
 
         expect(newSquare.x).toEqual(square.x+30);
@@ -14,7 +14,7 @@ describe('Square', function() {
         expect(newSquare.length).toEqual(square.length);
     });
 
-    it('should be able to move square to the left', function() {
+    it('should be able to move correctly to the left', function() {
         var newSquare = Square.generateNewSquareToTheLeft(square);
 
         expect(newSquare.x).toEqual(square.x-30);
@@ -22,7 +22,7 @@ describe('Square', function() {
         expect(newSquare.length).toEqual(square.length);
     });
 
-    it('should be able to move square down', function() {
+    it('should be able to move correctly down', function() {
         var newSquare = Square.generateNewSquareBelow(square);
 
         expect(newSquare.x).toEqual(square.x);

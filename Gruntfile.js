@@ -66,7 +66,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/js/**/*.js'],
-                tasks: ['jshint', 'requirejs']
+                tasks: ['jshint', 'requirejs', 'test']
             },
             css: {
                 files: ['src/scss/**/*.scss'],
@@ -85,7 +85,9 @@ module.exports = function(grunt) {
         jasmine: {
             unittests: {
                 src: [
-                    'src/js/pieces/square.js'
+                    'src/js/pieces/square.js',
+                    'src/js/pieces/longRectangle.js',
+                    'src/js/gameCanvasManager.js'
                 ],
                 options: {
                     specs: 'tests/spec/*Spec.js',
@@ -109,7 +111,7 @@ module.exports = function(grunt) {
 
     // Available tasks
     grunt.registerTask('travis', ['jasmine']);
-    grunt.registerTask('default', ['clean', 'sass', 'jshint', 'requirejs']);
+    grunt.registerTask('default', ['clean', 'sass', 'jshint', 'requirejs', 'test']);
     grunt.registerTask('build', ['default']);
     grunt.registerTask('test', ['jasmine']);
 };

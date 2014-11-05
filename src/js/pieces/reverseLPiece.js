@@ -4,6 +4,9 @@ define(function(require, module, exports) {
     var BasePiece   = require('src/js/pieces/basePiece');
 
     function ReverseLPiece(lengthOfSquare) {
+        // Inherit BasePiece properties
+        BasePiece.call(this);
+
         // Initial positions of pieces
         this.indivSquares = [
             new Square(90, 0, lengthOfSquare),
