@@ -1,9 +1,11 @@
 define(function(require, module, exports) {
    
-   var Square = require('src/js/pieces/square');
+    var Square = require('src/js/pieces/square');
+    var _      = require('underscore');
 
     function BasePiece() {
         this.indivSquares = [];
+        this.rotationState = 0;
     }
 
     BasePiece.prototype.getIndivSquares = function() {
@@ -12,6 +14,52 @@ define(function(require, module, exports) {
 
     BasePiece.prototype.setIndivSquares = function(squares) {
         this.indivSquares = squares;
+    };
+
+    BasePiece.prototype.decrementRotationState = function() {
+        if (this.rotationState === 0) {
+            this.rotationState = 3;
+        }
+        else {
+            this.rotationState--;
+        }
+    };
+
+    BasePiece.prototype.incrementRotationState = function() {
+        if (this.rotationState === 3) {
+            this.rotationState = 0;
+        }
+        else {
+            this.rotationState++;
+        }
+    };
+
+    BasePiece.prototype.generateSquaresShiftedToTheRight = function() {
+        var newSquares = [];
+        _.each(this.indivSquares, function(square) {
+            var shiftedSquare = new Square(square.x+square.length, square.y, square.length);
+            newSquares.push(shiftedSquare);
+        });
+
+        return newSquares;
+    };
+
+    BasePiece.prototype.generateSquaresShiftedToTheLeft = function() {
+        var newSquares = [];
+        _.each(this.indivSquares, function(square) {
+            newSquares.push(new Square(square.x-square.length, square.y, square.length));
+        });
+
+        return newSquares;
+    };
+
+    BasePiece.prototype.generateSquaresShiftedDown = function() {
+        var newSquares = [];
+        _.each(this.indivSquares, function(square) {
+            newSquares.push(new Square(square.x, square.y+square.length, square.length));
+        });
+
+        return newSquares;
     };
 
     /**

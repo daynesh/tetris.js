@@ -4,6 +4,9 @@ define(function(require, module, exports) {
    var BasePiece    = require('src/js/pieces/basePiece');
 
    function LongRectangle(lengthOfSquare) {
+        // Inherit BasePiece properties
+        BasePiece.call(this);
+
         // Initial positions of pieces
         this.indivSquares = [
             new Square(90, 0, lengthOfSquare),
@@ -34,18 +37,24 @@ define(function(require, module, exports) {
     LongRectangle.prototype.findOriginSquare = function() {
         var sortedSquares;
 
-        // If this is a vertical rectangle
-        if (this.indivSquares[0].x === this.indivSquares[1].x) {
-            // Find 2nd from the topmost square
-            sortedSquares = _.sortBy(this.indivSquares, function(square) { return square.y; });
+        switch (this.rotationState) {
+            case 0:
+                // Find 2nd from the left-most square
+                sortedSquares = _.sortBy(this.indivSquares, function(square) { return square.x; });
+                return sortedSquares[1];
+            case 1:
+                // Find 2nd from the bottom
+                sortedSquares = _.sortBy(this.indivSquares, function(square) { return square.y; });
+                return sortedSquares[2];
+            case 2:
+                // Find 2nd from the right-most square
+                sortedSquares = _.sortBy(this.indivSquares, function(square) { return square.x; });
+                return sortedSquares[2];
+            case 3:
+                // Find 2nd from the top
+                sortedSquares = _.sortBy(this.indivSquares, function(square) { return square.y; });
+                return sortedSquares[1];
         }
-        // If this is a horizontal rectangle
-        else {
-            // Find 2nd from the leftmost square
-            sortedSquares = _.sortBy(this.indivSquares, function(square) { return square.x; });
-        }
-
-        return sortedSquares[1];
     };
 
     return LongRectangle;

@@ -1,16 +1,18 @@
 define(function(require, module, exports) {
 
     var Square = require('src/js/pieces/square');
+    var $      = require('jquery');
 
     function GameCanvasManager() {
-        this.$canvas = $('.game-canvas');
-        this.context = this.$canvas[0].getContext('2d');
-        this.height = this.$canvas.height();
-        this.width = this.$canvas.width();
         this.squareLength = 30;
     }
 
     GameCanvasManager.prototype.initialize = function() {
+        this.$canvas = $('.game-canvas');
+        this.context = this.$canvas[0].getContext('2d');
+        this.height = this.$canvas.height();
+        this.width = this.$canvas.width();
+
         // Clear canvas
         this.context.clearRect(0, 0, this.width, this.height);
 
@@ -143,7 +145,6 @@ define(function(require, module, exports) {
             this.clearSquares( this.currentPiece.getIndivSquares() );
 
             // Check whether we can pain any of the newly rotated squares
-            var that = this;
             var canRotate = this.canSquaresBePainted(newSquares);
 
             if (canRotate) {
@@ -152,6 +153,7 @@ define(function(require, module, exports) {
 
                 // Finally, update currentPiece
                 this.currentPiece.setIndivSquares(newSquares);
+                this.currentPiece.incrementRotationState();
 
                 // Now we need to check if we can fuse lines
                 this.fuseLinesIfNeeded();
@@ -182,6 +184,7 @@ define(function(require, module, exports) {
 
                 // Finally, update currentPiece
                 this.currentPiece.setIndivSquares(newSquares);
+                this.currentPiece.decrementRotationState();
 
                 // Now we need to check if we can fuse lines
                 this.fuseLinesIfNeeded();
@@ -380,7 +383,7 @@ define(function(require, module, exports) {
                 return false;
             }
             // Is this piece above the top of the canvas
-            else if (square.y+10 < 0) {
+            else if (square.y + 10 < 0) {
                 return false;
             }
             // Is this piece outside of the left rail

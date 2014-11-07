@@ -4,6 +4,9 @@ define(function(require, module, exports) {
     var BasePiece   = require('src/js/pieces/basePiece');
 
     function LPiece(lengthOfSquare) {
+        // Inherit BasePiece properties
+        BasePiece.call(this);
+
         // Initial positions of pieces
         this.indivSquares = [
             new Square(90, lengthOfSquare, lengthOfSquare),
