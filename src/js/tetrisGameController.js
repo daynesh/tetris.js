@@ -75,7 +75,7 @@ define(function(require, module, exports) {
                     this.rotatePieceRight();
                     break;
                 default:
-                    console.log('Key pressed: ', e.which);
+                    console.warn('Unhandled key pressed: ', e.which);
                     return;
             }
             e.preventDefault();
@@ -198,7 +198,7 @@ define(function(require, module, exports) {
             $('.game-metrics .lines').html(this.lines);
 
             // Now check if we need to update the Level as well
-            var calculatedLevel = Math.ceil(this.lines / 10);
+            var calculatedLevel = Math.ceil((this.lines+1) / 10);
             if (this.level != calculatedLevel) {
                 this.level = calculatedLevel;
                 $('.game-metrics .level').html(this.level);
