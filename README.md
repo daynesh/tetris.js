@@ -41,6 +41,9 @@ node tetris.js
 ```
 From there, you can navigate to the URL: `http://localhost:3000`
 
+## Screenshot
+![Screenshot image](/../screenshots/game-screenshot.png)
+
 ## Development
 The following tasks are incredibly useful when developing the Tetris.js application:
 
