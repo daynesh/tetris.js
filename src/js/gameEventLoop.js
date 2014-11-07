@@ -39,6 +39,10 @@ define(function(require, module, exports) {
         else {
             // Generate random piece
             var newPiece = this.gamePieceRandomizer.generate();
+            var nextPieceUrl = this.gamePieceRandomizer.getNextPieceUrl();
+
+            // Notify anyone responsible for updating the next-piece image
+            $('.next-piece').trigger('nextpieceupdate', nextPieceUrl);
 
             this.canvasManager.addNewPiece(newPiece);
         }

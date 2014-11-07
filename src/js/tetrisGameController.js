@@ -82,8 +82,9 @@ define(function(require, module, exports) {
         }, this));
 
         // Custom events
-        $('.game-canvas')       .on('gameover',     _.bind(this.onGameOver,     this));
-        $('.game-canvas')       .on('linescleared', _.bind(this.onLinesCleared, this));
+        $('.game-canvas')       .on('gameover',        _.bind(this.onGameOver,         this));
+        $('.game-canvas')       .on('linescleared',    _.bind(this.onLinesCleared,     this));
+        $('.next-piece')        .on('nextpieceupdate', _.bind(this.onNextPieceUpdated, this));
     };
 
     /**
@@ -207,6 +208,13 @@ define(function(require, module, exports) {
                 this.gameEventLoop.updateInterval(2 / this.level);
             }
         }
+    };
+
+    /**
+     * Next Piece Image needs to be updated
+     */
+    TetrisGameController.prototype.onNextPieceUpdated = function(event, nextPieceUrl) {
+        $('.next-piece').css('background-image', 'url(' + nextPieceUrl + ')');
     };
 
     // Attach instantiated object to window
