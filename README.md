@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Daynesh/tetris.js.svg?branch=master)](https://travis-ci.org/Daynesh/tetris.js)
+[![Build Status](https://travis-ci.org/daynesh/tetris.js.svg?branch=master)](https://travis-ci.org/daynesh/tetris.js)
 
 Tetris.js
 =========
